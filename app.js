@@ -20,6 +20,26 @@
  * 
 */
 
+class Cuenta {
+    constructor(IDCuenta, NIFBeneficiario, NombreBeneficiario, NombreCuenta, saldo, TipoCuenta) {
+        this._IDCuenta = IDCuenta;
+        this._NIFBeneficiario = NIFBeneficiario;
+        this._NombreBeneficiario = NombreBeneficiario;
+        this._NombreCuenta = NombreCuenta;
+        this._saldo = saldo;
+        this._TipoCuenta = TipoCuenta;
+    }
+
+    muestraEstado() {
+        console.log(`*** Cuenta: ${this._IDCuenta} *****`);
+        console.log(`Nombre Beneficario: ${this._NombreBeneficiario}`);
+        console.log(`Nombre Cuenta: ${this._NombreCuenta} `);
+        console.log(`Tipo: ${this._TipoCuenta}`);
+        console.log(`Saldo: ${this._saldo}`);
+        console.log("******************************************")
+    }
+}
+
 /**
  * Class Transaccion
  * 
@@ -49,7 +69,7 @@
  * se han realizado.
 */
 
-/*
+
 const cuentaA = new Cuenta(
     "ES6621000418401234567891 ",
     "12345678X",
@@ -70,7 +90,7 @@ const cuentaB = new Cuenta(
 console.log("** estado inicial ***");
 cuentaA.muestraEstado();
 cuentaB.muestraEstado();
-*/
+
 /*
 const libroContable = new LibroContable();
 const transaccion = new Transaccion(cuentaB, cuentaA, 1800);
