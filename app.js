@@ -1,7 +1,7 @@
 /**
- * Class Cuenta
+ * Class Account
  *
- * CAMPOS:
+ * FIELDS:
  * ID Cuenta
  * Beneficiario NIF
  * Nombre beneficiario
@@ -9,7 +9,7 @@
  * saldo
  * Tipo de cuenta
  *
- * MÉTODOS:
+ * METHODS:
  * MuestraEstado
  *
  * CONSTRUCTOR:
@@ -20,74 +20,74 @@
  *
  */
 
-class Cuenta {
+class Account {
   constructor(
-    idCuenta,
-    nifBeneficiario,
-    nombreBeneficiario,
-    nombreCuenta,
-    saldo,
-    tipoCuenta
+    accountId,
+    beneficiaryId,
+    beneficiaryName,
+    accountName,
+    balance,
+    accountType
   ) {
-    this._idCuenta = idCuenta;
-    this._nifBeneficiario = nifBeneficiario;
-    this._nombreBeneficiario = nombreBeneficiario;
-    this._nombreCuenta = nombreCuenta;
-    this._saldo = saldo;
-    this._tipoCuenta = tipoCuenta;
+    this._accountId = accountId;
+    this._beneficiaryId = beneficiaryId;
+    this._beneficiaryName = beneficiaryName;
+    this._accountName = accountName;
+    this._balance = balance;
+    this._accountType = accountType;
   }
 
-  muestraEstado() {
-    console.log(`*** Cuenta: ${this._idCuenta} *****`);
-    console.log(`Nombre Beneficiario: ${this._nombreBeneficiario}`);
-    console.log(`Nombre Cuenta: ${this._nombreCuenta} `);
-    console.log(`Tipo: ${this._tipoCuenta}`);
-    console.log(`Saldo: ${this._saldo}`);
+  showStatus() {
+    console.log(`*** Cuenta: ${this._accountId} *****`);
+    console.log(`Nombre Beneficiario: ${this._beneficiaryName}`);
+    console.log(`Nombre Cuenta: ${this._accountName} `);
+    console.log(`Tipo: ${this._accountType}`);
+    console.log(`Saldo: ${this._balance}`);
     console.log("******************************************");
   }
 
-  get tipoCuenta() {
-    return this._tipoCuenta;
+  get accountType() {
+    return this._accountType;
   }
 
-  get idCuenta() {
-    return this._idCuenta;
+  get accountId() {
+    return this._accountId;
   }
 
-  get saldo() {
-    return this._saldo;
+  get balance() {
+    return this._balance;
   }
 
-  set saldo(saldoNuevo) {
-    this._saldo = saldoNuevo;
+  set balance(newValue) {
+    this._balance = newValue;
   }
 }
 
 /**
  * Class Transaccion
  *
- * CAMPOS:
+ * FIELDS:
  * Cuenta origen.
  * Cuenta destino.
  * Cantidad a tranferir.
  *
- * MÉTODOS:
+ * METHODS:
  * RealizaTransaccion(cantidad) -> hace efectiva la
  * transacción (calculado la comisión y deduciendo de cada
  * cuenta la cantidad correspondiente)
  *
  */
 
-class Transaccion {
-  constructor(cuentaOrigen, cuentaDestino, cantidad) {
-    this._cuentaOrigen = cuentaOrigen;
-    this._cuentaDestino = cuentaDestino;
-    this._cantidad = cantidad;
-    this._comision = 0;
+class Transfer {
+  constructor(originAccount, destinationAccount, quantity) {
+    this._originAccount = originAccount;
+    this._destinationAccount = destinationAccount;
+    this._quantity = quantity;
+    this._fee = 0;
   }
 
-  calcularComision(tipoCuenta) {
-    switch (tipoCuenta) {
+  getFee(accountType) {
+    switch (accountType) {
       case "empresa":
         return 0.5;
       case "particular":
@@ -97,41 +97,41 @@ class Transaccion {
     return -1;
   }
 
-  realizaTransaccion() {
-    this._comision = this.calcularComision(this._cuentaOrigen.tipoCuenta);
+  makeTransfer() {
+    this._fee = this.getFee(this._originAccount.accountType);
 
-    const saldoOrigenNuevo =
-      this._cuentaOrigen.saldo - this._cantidad - this._comision;
-    const saldoDestinoNuevo = this._cuentaDestino.saldo + this._cantidad;
+    const newOriginBalance =
+      this._originAccount.balance - this._quantity - this._fee;
+    const newDestinationBalance = this._destinationAccount.balance + this._quantity;
 
-    this._cuentaOrigen.saldo = saldoOrigenNuevo;
-    this._cuentaDestino.saldo = saldoDestinoNuevo;
+    this._originAccount.balance = newOriginBalance;
+    this._destinationAccount.balance = newDestinationBalance;
   }
 
-  get cuentaOrigen() {
-    return this._cuentaOrigen;
+  get originAccount() {
+    return this._originAccount;
   }
 
-  get cuentaDestino() {
-    return this._cuentaDestino;
+  get destinationAccount() {
+    return this._destinationAccount;
   }
 
-  get cantidad() {
-    return this._cantidad;
+  get quantity() {
+    return this._quantity;
   }
 
-  get comision() {
-    return this._comision;
+  get fee() {
+    return this._fee;
   }
 }
 
 /**
  * Class LibroContable
  *
- * CAMPOS:
+ * FIELDS:
  * Array de transacciones
  *
- * MÉTODOS:
+ * METHODS:
  * Realiza transacción -> recibe como parámetros dos cuentas
  * y realiza una transacción (la añade al listado de transacciones).
  *
@@ -139,30 +139,30 @@ class Transaccion {
  * se han realizado.
  */
 
-class LibroContable {
+class Ledger {
   constructor() {
-    this._transacciones = [];
+    this._transfers = [];
   }
 
-  realizaTransaccion(transaccion) {
-    transaccion.realizaTransaccion();
-    this._transacciones.push(transaccion);
+  makeTransfer(transfer) {
+    transfer.makeTransfer();
+    this._transfers.push(transfer);
   }
 
-  listaTransacciones() {
+  listTransfers() {
     console.log("**** Transacciones *****");
     console.log("");
-    this._transacciones.map((transaccion) => {
-      console.log(`Origen: ${transaccion.cuentaOrigen.idCuenta}`);
-      console.log(`Destino: ${transaccion.cuentaDestino.idCuenta}`);
-      console.log(`Cuantía: ${transaccion.cantidad}`);
-      console.log(`Comision: ${transaccion.comision}`);
+    this._transfers.map((transfer) => {
+      console.log(`Origen: ${transfer.originAccount.accountId}`);
+      console.log(`Destino: ${transfer.destinationAccount.accountId}`);
+      console.log(`Cuantía: ${transfer.quantity}`);
+      console.log(`Comision: ${transfer.fee}`);
       console.log("************************");
     });
   }
 }
 
-const cuentaA = new Cuenta(
+const accountA = new Account(
   "ES6621000418401234567891 ",
   "12345678X",
   "Juan Perez",
@@ -171,7 +171,7 @@ const cuentaA = new Cuenta(
   "particular"
 );
 
-const cuentaB = new Cuenta(
+const accountB = new Account(
   "ES1000492352082414205416",
   "A84939209",
   "Gestiones SL",
@@ -180,27 +180,19 @@ const cuentaB = new Cuenta(
   "empresa"
 );
 
-const cuentaC = new Cuenta(
-  "ES10004923452082414200017",
-  "W215039209",
-  "Sonia Garcia",
-  "comun",
-  5000,
-  "particular"
-);
 
 console.log("** estado inicial ***");
-cuentaA.muestraEstado();
-cuentaB.muestraEstado();
+accountA.showStatus();
+accountB.showStatus();
 
-const transaccion = new Transaccion(cuentaB, cuentaA, 1800);
+const transfer = new Transfer(accountB, accountA, 1800);
 
-const libroContable = new LibroContable();
-libroContable.realizaTransaccion(transaccion);
+const ledger = new Ledger();
+ledger.makeTransfer(transfer);
 
 console.log("** estado final ***");
-cuentaA.muestraEstado();
-cuentaB.muestraEstado();
+accountA.showStatus();
+accountB.showStatus();
 
 console.log("** Listado transacciones ***");
-libroContable.listaTransacciones();
+ledger.listTransfers();
